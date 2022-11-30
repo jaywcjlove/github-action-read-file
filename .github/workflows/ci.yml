@@ -13,6 +13,10 @@ jobs:
         with:
           node-version: 16
 
+      - run: npm install
+      - run: npm run build
+      - run: mkdir -p build
+
       - name: Read README.md
         id: package
         # uses: jaywcjlove/github-action-read-file@main
@@ -22,10 +26,6 @@ jobs:
 
       - name: Echo package.json
         run: echo "${{ steps.package.outputs.content }}"
-
-      - run: npm install
-      - run: npm run build
-      - run: mkdir -p build
 
       - name: Converts Markdown to HTML
         uses: jaywcjlove/markdown-to-html-cli@main
