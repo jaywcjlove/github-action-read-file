@@ -37,6 +37,17 @@ jobs:
       - name: Echo src/index.ts
         run: echo "${{ steps.tsfile.outputs.content }}"
 
+      - name: Read README.md(gh-pages)
+        id: ghpages
+        # uses: jaywcjlove/github-action-read-file@main
+        uses: ./
+        with:
+          branch: gh-pages
+          path: README.md
+
+      - name: Echo README.md(gh-pages)
+        run: echo "${{ steps.ghpages.outputs.content }}"
+
       - name: Converts Markdown to HTML
         uses: jaywcjlove/markdown-to-html-cli@main
         with:

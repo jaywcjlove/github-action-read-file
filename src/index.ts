@@ -52,8 +52,11 @@ export const getInputs = () => {
   if (currentFile && 'content' in currentFile) {
     const fileContent = nodeBase64ToUtf8(currentFile.content || '');
     setOutput('content', fileContent);
-    startGroup(`👉 File Content:`);
+    startGroup(`👉 File Content (JSON):`);
       info(`👉 ${JSON.stringify(currentFile, null, 2)}`);
+    endGroup();
+    startGroup(`👉 File Content:`);
+      info(`👉 ${fileContent}`);
     endGroup();
   } else {
     startGroup(`👉 File Content:`);

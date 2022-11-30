@@ -17,12 +17,26 @@ Read file contents. You can also get the file content in the branch
 ```yml
 - name: Read README.md
   id: package
-  uses: jaywcjlove/github-action-modify-file-content@main
+  uses: jaywcjlove/github-action-read-file@main
   with:
     path: package.json
 
 - name: Echo package.json
   run: echo "${{ steps.package.outputs.content }}"
+```
+
+Specify the **branch** to read the file content
+
+```yml
+- name: Read README.md(gh-pages)
+  id: ghpages
+  uses: jaywcjlove/github-action-read-file@main
+  with:
+    branch: gh-pages
+    path: README.md
+
+- name: Echo README.md(gh-pages)
+  run: echo "${{ steps.ghpages.outputs.content }}"
 ```
 
 ## See Also
