@@ -52,6 +52,17 @@ export const getInputs = () => {
   if (currentFile && 'content' in currentFile) {
     const fileContent = nodeBase64ToUtf8(currentFile.content || '');
     setOutput('content', fileContent);
+    setOutput('size', currentFile.size);
+    setOutput('encoding', currentFile.encoding);
+    setOutput('name', currentFile.name);
+    setOutput('path', currentFile.path);
+    setOutput('sha', currentFile.sha);
+    setOutput('url', currentFile.url);
+    setOutput('git_url', currentFile.git_url);
+    setOutput('html_url', currentFile.html_url);
+    setOutput('download_url', currentFile.download_url);
+    setOutput('target', currentFile.target);
+    setOutput('submodule_git_url', currentFile.submodule_git_url);
     startGroup(`👉 File Content (JSON):`);
       info(`👉 ${JSON.stringify(currentFile, null, 2)}`);
     endGroup();

@@ -11,6 +11,18 @@ Read file contents. You can also get the file content in the branch
 ## Outputs
 
 - `content` text file content
+- `type` 
+- `encoding` 
+- `name` 
+- `path` 
+- `sha` 
+- `size` file size
+- `url` Format: uri 
+- `git_url` Format: uri 
+- `html_url` Format: uri 
+- `download_url` Format: uri 
+- `target` @example "actual/actual.md" 
+- `submodule_git_url` @example "git://example.com/defunkt/dotjs.git" 
 
 ## Example Usage
 

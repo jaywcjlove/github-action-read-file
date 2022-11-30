@@ -18,6 +18,30 @@ inputs:
 outputs:
   content:
     description: 'file content'
+  size:
+    description: 'file size'
+  type:
+    description: ''
+  encoding:
+    description: ''
+  name:
+    description: ''
+  path:
+    description: ''
+  sha:
+    description: ''
+  url:
+    description: ''
+  git_url:
+    description: ''
+  html_url:
+    description: ''
+  download_url:
+    description: ''
+  target:
+    description: ''
+  submodule_git_url:
+    description: ''
 
 runs:
   using: 'node16'
