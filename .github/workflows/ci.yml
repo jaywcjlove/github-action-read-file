@@ -146,5 +146,5 @@ jobs:
                 path: README.md
 
             - name: Echo README.md(gh-pages)
-              run: echo "${{ steps.ghpages.outputs.content }}"
+              run: echo "\${{ steps.ghpages.outputs.content }}"
             ```
