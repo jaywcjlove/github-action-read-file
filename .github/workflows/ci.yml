@@ -34,8 +34,32 @@ jobs:
         with:
           path: src/index.ts
 
-      - name: Echo src/index.ts
+      - name: Echo (content) src/index.ts
         run: echo "${{ steps.tsfile.outputs.content }}"
+      - name: Echo (size) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.size }}"
+      - name: Echo (type) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.type }}"
+      - name: Echo (encoding) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.encoding }}"
+      - name: Echo (name) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.name }}"
+      - name: Echo (path) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.path }}"
+      - name: Echo (sha) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.sha }}"
+      - name: Echo (url) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.url }}"
+      - name: Echo (git_url) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.git_url }}"
+      - name: Echo (html_url) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.html_url }}"
+      - name: Echo (download_url) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.download_url }}"
+      - name: Echo (target) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.target }}"
+      - name: Echo (submodule_git_url) src/index.ts
+        run: echo "${{ steps.tsfile.outputs.submodule_git_url }}"
 
       - name: Read README.md(gh-pages)
         id: ghpages
