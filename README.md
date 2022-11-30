@@ -19,7 +19,7 @@ Read file contents.
   id: package
   uses: jaywcjlove/github-action-modify-file-content@main
   with:
-    path: ./package.json
+    path: package.json
 
 - name: Echo package.json
   run: echo "${{ steps.package.outputs.content }}"

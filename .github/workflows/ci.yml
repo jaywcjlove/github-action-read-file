@@ -27,9 +27,33 @@ jobs:
       - name: Echo package.json
         run: echo "${{ steps.package.outputs.content }}"
 
+      - name: Read src/index.ts
+        id: tsfile
+        # uses: jaywcjlove/github-action-read-file@main
+        uses: ./
+        with:
+          path: src/index.ts
+
+      - name: Echo src/index.ts
+        run: echo "${{ steps.tsfile.outputs.content }}"
+
       - name: Converts Markdown to HTML
         uses: jaywcjlove/markdown-to-html-cli@main
         with:
           output: build/index.html
           github-corners: https://github.com/jaywcjlove/github-action-read-file
           favicon: data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏷️</text></svg>
+
+      - name: gh-pages README.md
+        working-directory: build
+        run: |
+          cat > README.md << EOF
+          Website: https://jaywcjlove.github.io/github-action-read-file  
+          EOF
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          commit_message: ${{steps.tag_version.outputs.tag}} ${{ github.event.head_commit.message }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
