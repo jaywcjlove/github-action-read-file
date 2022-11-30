@@ -1,7 +1,7 @@
 Read File Content
 ===
 
-Read file contents.
+Read file contents. You can also get the file content in the branch
 
 ## Inputs
 

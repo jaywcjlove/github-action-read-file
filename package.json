@@ -1,7 +1,7 @@
 {
   "name": "github-action-read-file",
   "version": "1.0.0",
-  "description": "Read file contents in github",
+  "description": "Read file contents in github. You can also get the file content in the branch",
   "homepage": "https://github.com/jaywcjlove/github-action-read-file#readme",
   "main": "dist/index.js",
   "scripts": {

@@ -1,6 +1,6 @@
 name: 'Read File Content'
 author: 'Kenny Wong'
-description: 'Replace text content and submit content'
+description: 'Read file contents. You can also get the file content in the branch'
 inputs:
   token:
     description: 'Your GITHUB_TOKEN'
