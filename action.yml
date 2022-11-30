@@ -1,0 +1,28 @@
+name: 'Read File Content'
+author: 'Kenny Wong'
+description: 'Replace text content and submit content'
+inputs:
+  token:
+    description: 'Your GITHUB_TOKEN'
+    default: ${{ github.token }}
+    required: false
+  path:
+    description: 'File to be replaced'
+    default: ''
+    required: false
+  branch:
+    description: 'The person that committed the file. Default: the authenticated user.'
+    default: ${{ github.ref_name }}
+    required: false
+
+outputs:
+  content:
+    description: 'file content'
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
+
+branding:
+  icon: 'file'
+  color: 'purple'

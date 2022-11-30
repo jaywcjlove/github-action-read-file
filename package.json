@@ -1,0 +1,31 @@
+{
+  "name": "github-action-read-file",
+  "version": "1.0.0",
+  "description": "Read file contents in github",
+  "homepage": "https://github.com/jaywcjlove/github-action-read-file#readme",
+  "main": "dist/index.js",
+  "scripts": {
+    "prepare": "husky install",
+    "start": "npm run watch",
+    "build": "ncc build src/index.ts -o dist",
+    "watch": "ncc watch src/index.ts -o dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaywcjlove/github-action-read-file.git"
+  },
+  "keywords": [],
+  "author": "jaywcjlove",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "~1.10.0",
+    "@actions/github": "~5.1.1",
+    "@uiw/formatter": "^1.3.3",
+    "fs-extra": "^11.0.0"
+  },
+  "devDependencies": {
+    "@kkt/ncc": "1.0.15",
+    "husky": "~8.0.1",
+    "lint-staged": "~13.0.3"
+  }
+}
