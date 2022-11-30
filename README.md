@@ -5,8 +5,8 @@ Read file contents. You can also get the file content in the branch
 
 ## Inputs
 
-- `path` File path
-- `branch` the branch where the file resides. Default: `${{ github.ref_name }}`
+- `path` File path. E.g: `src/index.ts`
+- `branch` the branch where the file resides. Default: `${{ github.ref_name }}`, E.g: `main`, `gh-pages`
 
 ## Outputs
 
