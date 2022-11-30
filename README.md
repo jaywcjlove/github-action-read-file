@@ -3,27 +3,6 @@ Read File Content
 
 Read file contents. You can also get the file content in the branch
 
-## Inputs
-
-- `path` File path. E.g: `src/index.ts`
-- `branch` the branch where the file resides. Default: `${{ github.ref_name }}`, E.g: `main`, `gh-pages`
-
-## Outputs
-
-- `content` text file content
-- `type` 
-- `encoding` 
-- `name` 
-- `path` 
-- `sha` 
-- `size` file size
-- `url` Format: uri 
-- `git_url` Format: uri 
-- `html_url` Format: uri 
-- `download_url` Format: uri 
-- `target` @example "actual/actual.md" 
-- `submodule_git_url` @example "git://example.com/defunkt/dotjs.git" 
-
 ## Example Usage
 
 ```yml
@@ -50,6 +29,27 @@ Specify the **branch** to read the file content
 - name: Echo README.md(gh-pages)
   run: echo "${{ steps.ghpages.outputs.content }}"
 ```
+
+## Inputs
+
+- `path` File path. E.g: `src/index.ts`
+- `branch` the branch where the file resides. Default: `${{ github.ref_name }}`, E.g: `main`, `gh-pages`
+
+## Outputs
+
+- `content` text file content
+- `type` 
+- `encoding` 
+- `name` 
+- `path` 
+- `sha` 
+- `size` file size
+- `url` Format: uri 
+- `git_url` Format: uri 
+- `html_url` Format: uri 
+- `download_url` Format: uri 
+- `target` @example "actual/actual.md" 
+- `submodule_git_url` @example "git://example.com/defunkt/dotjs.git" 
 
 ## See Also
 
