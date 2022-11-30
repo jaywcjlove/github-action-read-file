@@ -25,8 +25,6 @@ Read file contents.
   run: echo "${{ steps.package.outputs.content }}"
 ```
 
-
-
 ## See Also
 
 - [Github Release Changelog Generator](https://github.com/jaywcjlove/changelog-generator) A GitHub Action that compares the commit differences between two branches
@@ -36,6 +34,7 @@ Read file contents.
 - [Create Coverage Badges](https://github.com/jaywcjlove/coverage-badges-cli) Create coverage badges from coverage reports. (no 3rd parties servers)
 - [Github Action package](https://github.com/jaywcjlove/github-action-package) Read and modify the contents of `package.json`.
 - [Github Action EJS](https://github.com/jaywcjlove/github-action-package) A github action to render a ejs template using github context.
+- [Modify File Content](https://github.com/jaywcjlove/github-action-modify-file-content) Replace text content and submit content.
 
 ## License
 

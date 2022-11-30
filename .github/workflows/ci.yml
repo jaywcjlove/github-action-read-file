@@ -15,7 +15,8 @@ jobs:
 
       - name: Read README.md
         id: package
-        uses: jaywcjlove/github-action-modify-file-content@main
+        # uses: jaywcjlove/github-action-read-file@main
+        uses: ./
         with:
           path: ./package.json
 
