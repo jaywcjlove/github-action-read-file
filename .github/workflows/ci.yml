@@ -132,7 +132,7 @@ jobs:
                 path: package.json
 
             - name: Echo package.json
-              run: echo "${{ steps.package.outputs.content }}"
+              run: echo "$\{{ steps.package.outputs.content }}"
             ```
 
             Specify the **branch** to read the file content
@@ -146,5 +146,5 @@ jobs:
                 path: README.md
 
             - name: Echo README.md(gh-pages)
-              run: echo "\${{ steps.ghpages.outputs.content }}"
+              run: echo "$\{{ steps.ghpages.outputs.content }}"
             ```
