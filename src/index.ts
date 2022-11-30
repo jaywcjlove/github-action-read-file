@@ -15,9 +15,11 @@ function nodeBase64ToUtf8(data: string) {
 async function getFileContents(branch: string): Promise<GetContentResponseType | undefined> {
   const {owner, repo, filepath} = getInputs()
   try {
-    const { data } = await octokit.rest.repos.getContent({
-      owner, repo, ref: branch, path: filepath
-    });
+    const body = { owner, repo, ref: branch, path: filepath }
+    startGroup(`👉 File Content Parameters:`);
+      info(`👉 ${JSON.stringify(body, null, 2)}`);
+    endGroup();
+    const { data } = await octokit.rest.repos.getContent(body);
     return data;
   } catch (err) {
     warning(`👉 Get File Contents: ${err instanceof Error ? err.message : err}`);
