@@ -1,6 +1,8 @@
 import { context, getOctokit } from '@actions/github';
 import { getInput, setOutput, startGroup, info, endGroup, warning } from '@actions/core';
 import { GetResponseTypeFromEndpointMethod  } from '@octokit/types';
+import fs from 'fs-extra';
+import path from 'path';
 
 export const myToken = getInput('token');
 export const octokit = getOctokit(myToken);
@@ -39,15 +41,50 @@ async function getBranch(): Promise<string> {
 export const getInputs = () => {
   const branch = getInput('branch');
   const filepath = getInput('path') || '';
+  const localfile = getInput('localfile') || '';
   return {
     ...context.repo,
-    filepath, branch,
+    filepath, branch, localfile,
   }
 }
 
 ;(async () => {
+  const { localfile } = getInputs()
   const branch = await getBranch()
   info(`👉 branch: (${branch || '-'})`);
+
+  if (localfile) {
+    const currentFilePath = path.resolve(localfile)
+    info(`👉 LocalFile: (${currentFilePath || '-'})`);
+    const content = await fs.readFile(currentFilePath)
+    setOutput('content', content);
+    // * dev: 2114n,
+    // * ino: 48064969n,
+    // * mode: 33188n,
+    // * nlink: 1n,
+    // * uid: 85n,
+    // * gid: 100n,
+    // * rdev: 0n,
+    // * size: 527n,
+    // * blksize: 4096n,
+    // * blocks: 8n,
+    // * atimeMs: 1318289051000n,
+    // * mtimeMs: 1318289051000n,
+    // * ctimeMs: 1318289051000n,
+    // * birthtimeMs: 1318289051000n,
+    // * atimeNs: 1318289051000000000n,
+    // * mtimeNs: 1318289051000000000n,
+    // * ctimeNs: 1318289051000000000n,
+    // * birthtimeNs: 1318289051000000000n,
+    // * atime: Mon, 10 Oct 2011 23:24:11 GMT,
+    // * mtime: Mon, 10 Oct 2011 23:24:11 GMT,
+    // * ctime: Mon, 10 Oct 2011 23:24:11 GMT,
+    // * birthtime: Mon, 10 Oct 2011 23:24:11 GMT }
+    const stat = await fs.stat(currentFilePath)
+    setOutput('size', stat.size);
+    return
+  }
+
   const currentFile = await getFileContents(branch);
   if (currentFile && 'content' in currentFile) {
     const fileContent = nodeBase64ToUtf8(currentFile.content || '');

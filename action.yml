@@ -10,6 +10,10 @@ inputs:
     description: 'File to be replaced'
     default: ''
     required: false
+  localfile:
+    description: 'Local File path'
+    default: ''
+    required: false
   branch:
     description: 'The person that committed the file. Default: the authenticated user.'
     default: ${{ github.ref_name }}
