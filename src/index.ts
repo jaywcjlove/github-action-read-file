@@ -57,7 +57,7 @@ export const getInputs = () => {
     const currentFilePath = path.resolve(localfile)
     info(`👉 LocalFile: (${currentFilePath || '-'})`);
     const content = await fs.readFile(currentFilePath)
-    setOutput('content', content);
+    setOutput('content', content.toString());
     // * dev: 2114n,
     // * ino: 48064969n,
     // * mode: 33188n,
