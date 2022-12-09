@@ -69,6 +69,16 @@ jobs:
           branch: gh-pages
           path: README.md
 
+      - name: Read src/index.ts
+        id: tsfile2
+        # uses: jaywcjlove/github-action-read-file@main
+        uses: ./
+        with:
+          localfile: src/index.ts
+
+      - name: Echo (content) src/index.ts
+        run: echo "${{ steps.tsfile2.outputs.content }}"
+
       - name: Echo README.md(gh-pages)
         run: echo "${{ steps.ghpages.outputs.content }}"
 
