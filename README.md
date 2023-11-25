@@ -1,6 +1,9 @@
 Read File Content
 ===
 
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-048754?logo=buymeacoffee)](https://jaywcjlove.github.io/#/sponsor)
+[![test](https://github.com/jaywcjlove/github-action-read-file/actions/workflows/ci.yml/badge.svg)](https://github.com/jaywcjlove/github-action-read-file/actions/workflows/ci.yml)
+
 Read file contents. You can also get the file content in the branch
 
 ## Example Usage
