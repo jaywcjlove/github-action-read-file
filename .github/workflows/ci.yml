@@ -149,6 +149,7 @@ jobs:
           package-path: ./package.json
           release: true
           body: |
+            [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-048754?logo=buymeacoffee)](https://jaywcjlove.github.io/#/sponsor)
             Documentation ${{ steps.changelog.outputs.tag }}: https://raw.githack.com/jaywcjlove/github-action-read-file/${{ steps.changelog.outputs.gh-pages-short-hash }}/index.html  
             Comparing Changes: ${{ steps.changelog.outputs.compareurl }} 
 
