@@ -25,7 +25,7 @@ jobs:
           path: package.json
 
       - name: Echo package.json
-        run: echo "${{ steps.package.outputs.content }}"
+        run: echo '${{ steps.package.outputs.content }}'
 
       - name: Read src/index.ts
         id: tsfile
