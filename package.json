@@ -5,7 +5,7 @@
   "homepage": "https://github.com/jaywcjlove/github-action-read-file#readme",
   "main": "dist/index.js",
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "start": "npm run watch",
     "build": "ncc build src/index.ts -o dist",
     "watch": "ncc watch src/index.ts -o dist"
@@ -17,14 +17,18 @@
   "keywords": [],
   "author": "jaywcjlove",
   "license": "MIT",
+  "engines": {
+    "node": ">=v20.11.0",
+    "npm": ">=10.2.4"
+  },
   "dependencies": {
     "@actions/core": "~1.10.0",
     "@actions/github": "~6.0.0",
-    "fs-extra": "~11.1.0"
+    "fs-extra": "~11.2.0"
   },
   "devDependencies": {
     "@kkt/ncc": "~1.1.0",
-    "husky": "~8.0.3",
-    "lint-staged": "~15.1.0"
+    "husky": "~9.0.11",
+    "lint-staged": "~15.2.2"
   }
 }
