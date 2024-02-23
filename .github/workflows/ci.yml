@@ -17,7 +17,7 @@ jobs:
       - run: npm run build
       - run: mkdir -p build
 
-      - name: Read README.md
+      - name: Read package.json
         id: package
         # uses: jaywcjlove/github-action-read-file@main
         uses: ./
