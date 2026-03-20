@@ -34923,55 +34923,42 @@ function _wrapAsyncGenerator(e) {
   };
 }
 function AsyncGenerator(e) {
-  var r, t;
-  function resume(r, t) {
+  var t, n;
+  function resume(t, n) {
     try {
-      var n = e[r](t),
-        o = n.value,
+      var r = e[t](n),
+        o = r.value,
         u = o instanceof OverloadYield;
-      Promise.resolve(u ? o.v : o).then(function (t) {
+      Promise.resolve(u ? o.v : o).then(function (n) {
         if (u) {
-          var i = "return" === r ? "return" : "next";
-          if (!o.k || t.done) return resume(i, t);
-          t = e[i](t).value;
+          var i = "return" === t && o.k ? t : "next";
+          if (!o.k || n.done) return resume(i, n);
+          n = e[i](n).value;
         }
-        settle(n.done ? "return" : "normal", t);
+        settle(!!r.done, n);
       }, function (e) {
         resume("throw", e);
       });
     } catch (e) {
-      settle("throw", e);
+      settle(2, e);
     }
   }
-  function settle(e, n) {
-    switch (e) {
-      case "return":
-        r.resolve({
-          value: n,
-          done: !0
-        });
-        break;
-      case "throw":
-        r.reject(n);
-        break;
-      default:
-        r.resolve({
-          value: n,
-          done: !1
-        });
-    }
-    (r = r.next) ? resume(r.key, r.arg) : t = null;
+  function settle(e, r) {
+    2 === e ? t.reject(r) : t.resolve({
+      value: r,
+      done: e
+    }), (t = t.next) ? resume(t.key, t.arg) : n = null;
   }
-  this._invoke = function (e, n) {
+  this._invoke = function (e, r) {
     return new Promise(function (o, u) {
       var i = {
         key: e,
-        arg: n,
+        arg: r,
         resolve: o,
         reject: u,
         next: null
       };
-      t ? t = t.next = i : (r = t = i, resume(e, n));
+      n ? n = n.next = i : (t = n = i, resume(e, r));
     });
   }, "function" != typeof e["return"] && (this["return"] = void 0);
 }
@@ -36378,14 +36365,26 @@ var customFormat = /^-?\d+n$/;
 var bigIntsStringify = /([\[:])?"(-?\d+)n"($|([\\n]|\s)*(\s|[\\n])*[,\}\]])/g;
 var noiseStringify = /([\[:])?("-?\d+n+)n("$|"([\\n]|\s)*(\s|[\\n])*[,\}\]])/g;
 
-/** @typedef {(key: string, value: any, context?: { source: string }) => any} Reviver */
+/**
+ * @typedef {(this: any, key: string | number | undefined, value: any) => any} Replacer
+ * @typedef {(key: string | number | undefined, value: any, context?: { source: string }) => any} Reviver
+ */
 
 /**
- * Function to serialize value to a JSON string.
- * Converts BigInt values to a custom format (strings with digits and "n" at the end) and then converts them to proper big integers in a JSON string.
- * @param {*} value - The value to convert to a JSON string.
- * @param {(Function|Array<string>|null)} [replacer] - A function that alters the behavior of the stringification process, or an array of strings to indicate properties to exclude.
- * @param {(string|number)} [space] - A string or number to specify indentation or pretty-printing.
+ * Converts a JavaScript value to a JSON string.
+ *
+ * Supports serialization of BigInt values using two strategies:
+ * 1. Custom format "123n" → "123" (universal fallback)
+ * 2. Native JSON.rawJSON() (Node.js 22+, fastest) when available
+ *
+ * All other values are serialized exactly like native JSON.stringify().
+ *
+ * @param {*} value The value to convert to a JSON string.
+ * @param {Replacer | Array<string | number> | null} [replacer]
+ *   A function that alters the behavior of the stringification process,
+ *   or an array of strings/numbers to indicate properties to exclude.
+ * @param {string | number} [space]
+ *   A string or number to specify indentation or pretty-printing.
  * @returns {string} The JSON string representation.
  */
 var JSONStringify = function JSONStringify(value, replacer, space) {
@@ -36399,7 +36398,7 @@ var JSONStringify = function JSONStringify(value, replacer, space) {
   }
   if (!value) return originalStringify(value, replacer, space);
   var convertedToCustomJSON = originalStringify(value, function (key, value) {
-    var isNoise = typeof value === "string" && Boolean(value.match(noiseValue));
+    var isNoise = typeof value === "string" && noiseValue.test(value);
     if (isNoise) return value.toString() + "n"; // Mark noise values with additional "n" to offset the deletion of one "n" during the processing
 
     if (typeof value === "bigint") return value.toString() + "n";
@@ -36412,34 +36411,62 @@ var JSONStringify = function JSONStringify(value, replacer, space) {
 
   return denoisedJSON;
 };
+var featureCache = new Map();
 
 /**
- * Support for JSON.parse's context.source feature detection.
- * @type {boolean}
+ * Detects if the current JSON.parse implementation supports the context.source feature.
+ *
+ * Uses toString() fingerprinting to cache results and automatically detect runtime
+ * replacements of JSON.parse (polyfills, mocks, etc.).
+ *
+ * @returns {boolean} true if context.source is supported, false otherwise.
  */
 var isContextSourceSupported = function isContextSourceSupported() {
-  return JSON.parse("1", function (_, __, context) {
-    return !!context && context.source === "1";
-  });
+  var parseFingerprint = JSON.parse.toString();
+  if (featureCache.has(parseFingerprint)) {
+    return featureCache.get(parseFingerprint);
+  }
+  try {
+    var result = JSON.parse("1", function (_, __, context) {
+      return !!(context !== null && context !== void 0 && context.source) && context.source === "1";
+    });
+    featureCache.set(parseFingerprint, result);
+    return result;
+  } catch (_unused) {
+    featureCache.set(parseFingerprint, false);
+    return false;
+  }
 };
 
 /**
- * Convert marked big numbers to BigInt
- * @type {Reviver}
+ * Reviver function that converts custom-format BigInt strings back to BigInt values.
+ * Also handles "noise" strings that accidentally match the BigInt format.
+ *
+ * @param {string | number | undefined} key The object key.
+ * @param {*} value The value being parsed.
+ * @param {object} [context] Parse context (if supported by JSON.parse).
+ * @param {Reviver} [userReviver] User's custom reviver function.
+ * @returns {any} The transformed value.
  */
 var convertMarkedBigIntsReviver = function convertMarkedBigIntsReviver(key, value, context, userReviver) {
-  var isCustomFormatBigInt = typeof value === "string" && value.match(customFormat);
+  var isCustomFormatBigInt = typeof value === "string" && customFormat.test(value);
   if (isCustomFormatBigInt) return BigInt(value.slice(0, -1));
-  var isNoiseValue = typeof value === "string" && value.match(noiseValue);
+  var isNoiseValue = typeof value === "string" && noiseValue.test(value);
   if (isNoiseValue) return value.slice(0, -1);
   if (typeof userReviver !== "function") return value;
   return userReviver(key, value, context);
 };
 
 /**
- * Faster (2x) and simpler function to parse JSON.
- * Based on JSON.parse's context.source feature, which is not universally available now.
- * Does not support the legacy custom format, used in the first version of this library.
+ * Fast JSON.parse implementation (~2x faster than classic fallback).
+ * Uses JSON.parse's context.source feature to detect integers and convert
+ * large numbers directly to BigInt without string manipulation.
+ *
+ * Does not support legacy custom format from v1 of this library.
+ *
+ * @param {string} text JSON string to parse.
+ * @param {Reviver} [reviver] Transform function to apply to each value.
+ * @returns {any} Parsed JavaScript value.
  */
 var JSONParseV2 = function JSONParseV2(text, reviver) {
   return JSON.parse(text, function (key, value, context) {
@@ -36457,9 +36484,21 @@ var stringsOrLargeNumbers = /"(?:\\.|[^"])*"|-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+
 var noiseValueWithQuotes = /^"-?\d+n+"$/; // Noise - strings that match the custom format before being converted to it
 
 /**
- * Function to parse JSON.
- * If JSON has number values greater than Number.MAX_SAFE_INTEGER, we convert those values to a custom format, then parse them to BigInt values.
- * Other types of values are not affected and parsed as native JSON.parse() would parse them.
+ * Converts a JSON string into a JavaScript value.
+ *
+ * Supports parsing of large integers using two strategies:
+ * 1. Classic fallback: Marks large numbers with "123n" format, then converts to BigInt
+ * 2. Fast path (JSONParseV2): Uses context.source feature (~2x faster) when available
+ *
+ * All other JSON values are parsed exactly like native JSON.parse().
+ *
+ * @param {string} text A valid JSON string.
+ * @param {Reviver} [reviver]
+ *   A function that transforms the results. This function is called for each member
+ *   of the object. If a member contains nested objects, the nested objects are
+ *   transformed before the parent object is.
+ * @returns {any} The parsed JavaScript value.
+ * @throws {SyntaxError} If text is not valid JSON.
  */
 var JSONParse = function JSONParse(text, reviver) {
   if (!text) return originalParse(text, reviver);
@@ -36468,7 +36507,7 @@ var JSONParse = function JSONParse(text, reviver) {
   // Find and mark big numbers with "n"
   var serializedData = text.replace(stringsOrLargeNumbers, function (text, digits, fractional, exponential) {
     var isString = text[0] === '"';
-    var isNoise = isString && Boolean(text.match(noiseValueWithQuotes));
+    var isNoise = isString && noiseValueWithQuotes.test(text);
     if (isNoise) return text.substring(0, text.length - 1) + 'n"'; // Mark noise values with additional "n" to offset the deletion of one "n" during the processing
 
     var isFractionalOrExponential = fractional || exponential;
